@@ -1,0 +1,25 @@
+
+apply plugin: 'groovy'
+apply plugin: 'io.jmix'
+
+group = 'cn.jmix.qiniufs'
+archivesBaseName = 'jmixcn-qiniufs'
+
+dependencies {
+    api 'io.jmix.core:jmix-core'
+    api 'com.qiniu:qiniu-java-sdk:7.7.+'
+
+    testImplementation 'org.springframework.boot:spring-boot-test'
+    testImplementation 'org.springframework:spring-test'
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.spockframework:spock-spring"
+    testRuntimeOnly 'org.slf4j:slf4j-simple'
+    testRuntimeOnly 'org.hsqldb:hsqldb'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+
+}
+
+test {
+    useJUnitPlatform()
+}
