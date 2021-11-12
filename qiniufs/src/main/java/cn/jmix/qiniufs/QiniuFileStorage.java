@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import com.google.gson.*;
 
 @Internal
 @Component("qiniufs_FileStorage")
@@ -49,6 +50,7 @@ public class QiniuFileStorage implements FileStorage {
     protected String bucket;
     protected int chunkSize;
     protected String endpointUrl;
+    protected Region regin; //机房
 
     @Autowired
     protected TimeSource timeSource;
@@ -66,7 +68,13 @@ public class QiniuFileStorage implements FileStorage {
     /**
      * Optional constructor that allows you to override {@link QiniuFileStorageProperties}.
      */
-    public QiniuFileStorage(String storageName, String accessKey, String secretAccessKey, String bucket, int chunkSize, @Nullable String endpointUrl) {
+    public QiniuFileStorage(String storageName,
+                            String accessKey,
+                            String secretAccessKey,
+                            String bucket,
+                            int chunkSize,
+                            @Nullable String endpointUrl,
+                            String reginName) {
         this.useConfigurationProperties = false;
         this.storageName = storageName;
         this.accessKey = accessKey;
@@ -74,6 +82,26 @@ public class QiniuFileStorage implements FileStorage {
         this.bucket = bucket;
         this.chunkSize = chunkSize;
         this.endpointUrl = endpointUrl;
+        switch (reginName){
+            case "huadong":
+                this.regin = Region.huadong();
+                break;
+            case "huabei":
+                this.regin = Region.huabei();
+                break;
+            case "huanan":
+                this.regin = Region.huanan();
+                break;
+            case "beimei":
+                this.regin = Region.beimei();
+                break;
+            case "xinjiapo":
+                this.regin = Region.xinjiapo();
+                break;
+            default:
+                this.regin = Region.autoRegion();
+                break;
+        }
     }
 
     @EventListener
@@ -90,7 +118,6 @@ public class QiniuFileStorage implements FileStorage {
             this.endpointUrl = properties.getEndpointUrl();
         }
     }
-
 
     public void refreshOssClient() {
         refreshProperties();
@@ -132,10 +159,11 @@ public class QiniuFileStorage implements FileStorage {
     public FileRef saveStream(String fileName, InputStream inputStream) {
         String key = createFileKey(fileName); //文件名
         //构造一个带指定 Region 对象的配置类
-        Configuration cfg = new Configuration(Region.region1());//华北机房
+        Configuration cfg = new Configuration(this.regin);//机房
         cfg.resumableUploadAPIVersion = Configuration.ResumableUploadAPIVersion.V2;// 指定分片上传版本
         cfg.resumableUploadMaxConcurrentTaskCount = 2;  // 设置分片上传并发，1：采用同步上传；大于1：采用并发上传
-        //TODO 其他可选参数...
+        cfg.resumableUploadAPIV2BlockSize = this.chunkSize * 1024; //使用分片 V2 上传时的分片大小
+
         try {
             byte[] data = IOUtils.toByteArray(inputStream); //数据流
 
@@ -146,8 +174,10 @@ public class QiniuFileStorage implements FileStorage {
             FileRecorder fileRecorder = new FileRecorder(localTempDir);
             UploadManager uploadManager = new UploadManager(cfg, fileRecorder);
             Response response = uploadManager.put(data, key, upToken);
+            //解析上传成功的结果
+            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
 
-            return new FileRef(getStorageName(), key, fileName);
+            return new FileRef(getStorageName(), putRet.key, fileName);
         } catch (IOException e) {
             String message = String.format("Could not save file %s.", fileName);
             throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, message);
