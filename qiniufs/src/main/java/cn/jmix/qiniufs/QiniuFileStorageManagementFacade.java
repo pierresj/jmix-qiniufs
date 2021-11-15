@@ -51,15 +51,16 @@ public class QiniuFileStorageManagementFacade {
             @ManagedOperationParameter(name = "secretAccessKey", description = "Qiniu Kodo secret access key"),
             @ManagedOperationParameter(name = "bucket", description = "Qiniu Kodo bucket name"),
             @ManagedOperationParameter(name = "chunkSize", description = "Qiniu Kodo chunk size (kB)"),
+            @ManagedOperationParameter(name = "regionName", description = "Qiniu Kodo region"),
             @ManagedOperationParameter(name = "endpointUrl", description = "Optional custom Qiniu Kodo storage endpoint URL")})
     public String refreshAliOssClient(String storageName, String accessKey, String secretAccessKey,
-                                  String region, String bucket, int chunkSize, @Nullable String endpointUrl) {
+                                  String regionName, String bucket, int chunkSize, @Nullable String endpointUrl) {
         FileStorage fileStorage = fileStorageLocator.getByName(storageName);
         if (fileStorage instanceof QiniuFileStorage) {
             QiniuFileStorage qiniuFileStorage = (QiniuFileStorage) fileStorage;
             qiniuFileStorage.setAccessKey(accessKey);
             qiniuFileStorage.setSecretAccessKey(secretAccessKey);
-            qiniuFileStorage.setRegion(region);
+            qiniuFileStorage.setRegionName(regionName);
             qiniuFileStorage.setBucket(bucket);
             qiniuFileStorage.setChunkSize(chunkSize);
             qiniuFileStorage.setEndpointUrl(endpointUrl);
