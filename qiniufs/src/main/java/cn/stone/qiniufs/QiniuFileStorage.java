@@ -1,4 +1,4 @@
-package cn.jmix.qiniufs;
+package cn.stone.qiniufs;
 
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -7,7 +7,6 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.storage.persistent.FileRecorder;
 import com.qiniu.util.Auth;
-import com.qiniu.util.StringMap;
 import io.jmix.core.*;
 import io.jmix.core.annotation.Internal;
 import org.apache.commons.io.FilenameUtils;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;

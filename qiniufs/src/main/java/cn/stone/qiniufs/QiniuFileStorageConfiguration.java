@@ -1,4 +1,4 @@
-package cn.jmix.qiniufs;
+package cn.stone.qiniufs;
 
 import io.jmix.core.CoreConfiguration;
 import io.jmix.core.annotation.JmixModule;

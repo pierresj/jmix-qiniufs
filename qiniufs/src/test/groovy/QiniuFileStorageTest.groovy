@@ -1,6 +1,6 @@
-import cn.jmix.qiniufs.QiniuFileRegion
-import cn.jmix.qiniufs.QiniuFileStorage
-import cn.jmix.qiniufs.QiniuFileStorageConfiguration
+import cn.stone.qiniufs.QiniuFileRegion
+import cn.stone.qiniufs.QiniuFileStorage
+import cn.stone.qiniufs.QiniuFileStorageConfiguration
 import io.jmix.core.CoreConfiguration
 import io.jmix.core.FileRef
 import io.jmix.core.FileStorage
