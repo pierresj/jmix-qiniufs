@@ -1,4 +1,4 @@
-package cn.stone.qiniufs;
+package io.github.pierresj.qiniufs;
 
 import io.jmix.core.FileStorage;
 import io.jmix.core.FileStorageLocator;
