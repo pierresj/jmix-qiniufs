@@ -1,9 +1,11 @@
 buildscript {
     ext.aliRepo = [
-            snapshot: 'https://repo.rdc.aliyun.com/repository/72077-snapshot-057BdJ/',
-            release : 'https://repo.rdc.aliyun.com/repository/72077-release-FWXfLw/',
-            username: project.hasProperty("skd.repo.username") ? project['skd.repo.username'] : '',
-            password: project.hasProperty("skd.repo.password") ? project['skd.repo.password'] : ''
+            //snapshot: 'https://repo.rdc.aliyun.com/repository/72077-snapshot-057BdJ/',
+            //release : 'https://repo.rdc.aliyun.com/repository/72077-release-FWXfLw/',
+            snapshot: 'https://repo-snapshot.sikada.cn/',
+            release : 'https://repo.sikada.cn/',
+            username: project.hasProperty("skd.repo.username") ? project['skd.repo.username'] : 'zgd8Rx',
+            password: project.hasProperty("skd.repo.password") ? project['skd.repo.password'] : 'r4CKJ2iYrP'
     ]
 
     repositories {
@@ -35,7 +37,7 @@ buildscript {
 
 
 
-group = 'cn.jmix'
+group = 'cn.stone'
 version = '0.0.1-SNAPSHOT'
 
 subprojects {

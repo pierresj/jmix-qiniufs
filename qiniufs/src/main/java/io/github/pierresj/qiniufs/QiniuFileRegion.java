@@ -1,4 +1,4 @@
-package cn.stone.qiniufs;
+package io.github.pierresj.qiniufs;
 
 import com.qiniu.storage.Region;
 import org.springframework.stereotype.Component;
