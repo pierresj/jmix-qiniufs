@@ -2,7 +2,7 @@
 apply plugin: 'groovy'
 apply plugin: 'io.jmix'
 
-group = 'cn.jmix.qiniufs'
+group = 'io.gethub.pierresj.qiniufs'
 archivesBaseName = 'jmixcn-qiniufs'
 
 dependencies {

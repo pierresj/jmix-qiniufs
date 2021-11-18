@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=  cn.stone.qiniufs.autoconfigure.QiniufsAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=  io.github.pierresj.qiniufs.autoconfigure.QiniufsAutoConfiguration

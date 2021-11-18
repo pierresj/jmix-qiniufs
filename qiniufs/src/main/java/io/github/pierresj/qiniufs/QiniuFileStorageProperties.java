@@ -1,4 +1,4 @@
-package cn.stone.qiniufs;
+package io.github.pierresj.qiniufs;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;

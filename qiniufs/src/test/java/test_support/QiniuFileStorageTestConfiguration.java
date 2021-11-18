@@ -1,6 +1,6 @@
 package test_support;
 
-import cn.stone.qiniufs.QiniuFileStorageConfiguration;
+import io.github.pierresj.qiniufs.QiniuFileStorageConfiguration;
 import io.jmix.core.annotation.JmixModule;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;

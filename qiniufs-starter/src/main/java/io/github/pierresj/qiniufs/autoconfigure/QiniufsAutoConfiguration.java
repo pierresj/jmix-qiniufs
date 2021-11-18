@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package cn.stone.qiniufs.autoconfigure;
+package io.github.pierresj.qiniufs.autoconfigure;
 
-import cn.stone.qiniufs.QiniuFileStorageConfiguration;
+import io.github.pierresj.qiniufs.QiniuFileStorageConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
