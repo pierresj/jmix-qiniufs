@@ -4,8 +4,8 @@ buildscript {
             //release : 'https://repo.rdc.aliyun.com/repository/72077-release-FWXfLw/',
             snapshot: 'https://repo-snapshot.sikada.cn/',
             release : 'https://repo.sikada.cn/',
-            username: project.hasProperty("skd.repo.username") ? project['skd.repo.username'] : 'zgd8Rx',
-            password: project.hasProperty("skd.repo.password") ? project['skd.repo.password'] : 'r4CKJ2iYrP'
+            username: project.hasProperty("skd.repo.username") ? project['skd.repo.username'] : '',
+            password: project.hasProperty("skd.repo.password") ? project['skd.repo.password'] : ''
     ]
 
     repositories {
@@ -34,16 +34,16 @@ buildscript {
         classpath "io.jmix.gradle:jmix-gradle-plugin:1.1.0"
     }
 }
-
-
-
-group = 'cn.stone'
+group = 'io.github.pierresj'
 version = '0.0.1-SNAPSHOT'
-
+if(project.hasProperty('teamcity')) {
+    version += '-build-' + project.teamcity['build.number']
+}
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'io.jmix'
+    apply plugin: 'signing'
 
     repositories {
         mavenCentral()
@@ -65,29 +65,87 @@ subprojects {
     def subArchivesBaseName = props.getProperty('archivesBaseName')
     def archName = subArchivesBaseName.substring(1, subArchivesBaseName.length() - 1)
 
-    java {
-        withSourcesJar()
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier = 'sources'
     }
 
-    artifacts {
-        archives sourcesJar
-    }
+//    task javadocJar(type: Jar) {
+//        from javadoc
+//        classifier = 'javadoc'
+//        exclude {
+//            Xdoclint = 'none'
+//        }
+//    }
 
     publishing {
         repositories {
             maven {
                 url = aliRepo.snapshot
+                //url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
                 credentials {
                     username aliRepo.username
                     password aliRepo.password
                 }
                 allowInsecureProtocol = true
             }
+            maven {
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username "sikada"
+                    password "G%w!M4RHEuZ5Xd2"
+                }
+                allowInsecureProtocol = true
+            }
+            maven {
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                credentials {
+                    username "sikada"
+                    password "G%w!M4RHEuZ5Xd2"
+                }
+                allowInsecureProtocol = true
+            }
         }
         publications {
-            javaMaven(MavenPublication) {
-                artifactId = archName
+//            javaMaven(MavenPublication) {
+//                artifactId = archName
+//                from components.java
+//            }
+            mavenJava(MavenPublication) {
+                // groupId = project.group
+                // artifactId = project.name
+                // version = project.version
+                // groupId,artifactId,version，如果不定义，则会按照以上默认值执行
                 from components.java
+                artifact sourcesJar
+                // artifact javadocJar
+                pom {
+                    // 构件名称
+                    // 区别于artifactId，可以理解为artifactName
+                    name = 'qiniu-oss storage'
+                    // 构件描述
+                    description = 'qiniu-oss storage'
+                    // 许可证名称和地址
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    // 开发者信息
+                    developers {
+                        developer {
+                            name = 'shijin'
+                            email = '13453157350@163.com'
+                        }
+                    }
+                    // 版本控制仓库地址
+                    scm {
+                        url = 'https://github.com/pierresj/jmix-qiniufs'
+                        connection = 'scm:git:git://github.com/pierresj/jmix-qiniufs.git'
+                        developerConnection = 'scm:git:ssh://git@github.com:pierresj/jmix-qiniufs.git'
+                    }
+                }
             }
         }
     }
