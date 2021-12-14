@@ -45,11 +45,15 @@ subprojects {
     apply plugin: 'io.jmix'
     apply plugin: 'signing'
 
+    signing {
+        sign configurations.archives
+    }
+
     repositories {
         mavenCentral()
-                maven {
-        url 'https://global.repo.jmix.io/repository/public'
-    }
+        maven {
+            url 'https://global.repo.jmix.io/repository/public'
+        }
     }
 
     jmix {
@@ -64,11 +68,23 @@ subprojects {
     buildFile.withInputStream { props.load(it) }
     def subArchivesBaseName = props.getProperty('archivesBaseName')
     def archName = subArchivesBaseName.substring(1, subArchivesBaseName.length() - 1)
-
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allJava
-        classifier = 'sources'
+        
+    java {
+        withSourcesJar()
     }
+
+    artifacts {
+        archives sourcesJar
+    }
+
+    ext {
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
+    }
+
+//    task sourcesJar(type: Jar) {
+//        from sourceSets.main.allJava
+//        classifier = 'sources'
+//    }
 
 //    task javadocJar(type: Jar) {
 //        from javadoc
@@ -80,7 +96,7 @@ subprojects {
 
     publishing {
         repositories {
-            maven {
+            /*maven {
                 url = aliRepo.snapshot
                 //url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
                 credentials {
@@ -96,22 +112,23 @@ subprojects {
                     password "G%w!M4RHEuZ5Xd2"
                 }
                 allowInsecureProtocol = true
-            }
+            }*/
             maven {
-                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                def  releaseRepo = "https://s01.oss.sonatype.org/content/repositories/releases/"
+                def snapshotRepo = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                url = isReleaseVersion ? releaseRepo : snapshotRepo
                 credentials {
-                    username "sikada"
-                    password "G%w!M4RHEuZ5Xd2"
+                    username = "sikada"
+                    password = "G%w!M4RHEuZ5Xd2"
                 }
-                allowInsecureProtocol = true
             }
         }
         publications {
-//            javaMaven(MavenPublication) {
-//                artifactId = archName
-//                from components.java
-//            }
-            mavenJava(MavenPublication) {
+            javaMaven(MavenPublication) {
+                artifactId = archName
+                from components.java
+            }
+            /*mavenJava(MavenPublication) {
                 // groupId = project.group
                 // artifactId = project.name
                 // version = project.version
@@ -136,7 +153,7 @@ subprojects {
                     developers {
                         developer {
                             name = 'shijin'
-                            email = '13453157350@163.com'
+                            email = 'stone@sikada.cn'
                         }
                     }
                     // 版本控制仓库地址
@@ -146,8 +163,12 @@ subprojects {
                         developerConnection = 'scm:git:ssh://git@github.com:pierresj/jmix-qiniufs.git'
                     }
                 }
-            }
+            }*/
         }
+    }
+
+    signing {
+        sign publishing.publications.javaMaven
     }
 
     // remove after https://youtrack.jetbrains.com/issue/IDEA-227215 is fixed
@@ -155,3 +176,4 @@ subprojects {
         enabled = false
     }
 }
+

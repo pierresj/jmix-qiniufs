@@ -2,8 +2,8 @@
 apply plugin: 'groovy'
 apply plugin: 'io.jmix'
 
-group = 'io.gethub.pierresj.qiniufs'
-archivesBaseName = 'jmixcn-qiniufs'
+group = 'io.gethub.pierresj'
+archivesBaseName = 'pierresj-qiniufs'
 
 dependencies {
     api 'io.jmix.core:jmix-core'
