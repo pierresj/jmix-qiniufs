@@ -1,4 +1,4 @@
-archivesBaseName = 'qiniufs-starter'
+archivesBaseName = 'jmix-qiniufs'
 
 jmix {
     entitiesEnhancing {
