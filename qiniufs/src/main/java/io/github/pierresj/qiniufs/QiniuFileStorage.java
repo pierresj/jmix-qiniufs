@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -87,8 +86,8 @@ public class QiniuFileStorage implements FileStorage {
     }
 
     @EventListener
-    public void initOssClient(ApplicationStartedEvent event) {
-        refreshOssClient();
+    public void initKodoClient(ApplicationStartedEvent event) {
+        refreshKodoClient();
     }
 
     protected void refreshProperties() {
@@ -101,7 +100,7 @@ public class QiniuFileStorage implements FileStorage {
         }
     }
 
-    public void refreshOssClient() {
+    public void refreshKodoClient() {
         refreshProperties();
         Auth auth = Auth.create(accessKey, secretAccessKey);
         clientReference.set(auth);

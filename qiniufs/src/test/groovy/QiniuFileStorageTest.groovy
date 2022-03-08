@@ -2,7 +2,6 @@ import io.github.pierresj.qiniufs.QiniuFileRegion
 import io.github.pierresj.qiniufs.QiniuFileStorage
 import io.github.pierresj.qiniufs.QiniuFileStorageConfiguration
 import io.jmix.core.CoreConfiguration
-import io.jmix.core.FileRef
 import io.jmix.core.FileStorage
 import io.jmix.core.UuidProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,59 +26,23 @@ class QiniuFileStorageTest extends Specification {
     private QiniuFileRegion qiniuFileRegion;
 
 
-    def "save stream"(){
+    def "save open remove"(){
         def fileName=UuidProvider.createUuid().toString()+".txt";
-        def fileStream=this.getClass().getClassLoader().getResourceAsStream("files/simple.txt");
-        //println fileStream
-        def fileRef=fileStorage.saveStream(fileName,fileStream);
+        String string = "Text for testing qiniu.";
+        InputStream inputStream = new ByteArrayInputStream(string.getBytes());
+        def fileRef=fileStorage.saveStream(fileName,inputStream);
+        def fileExists= fileStorage.fileExists(fileRef)
         def openedStream=fileStorage.openStream(fileRef);
+        def fileOpened =openedStream!=null
+        fileStorage.removeFile(fileRef)
         expect:
-            openedStream!=null
+        verifyAll {
+            fileExists
+            fileOpened
+        }
     }
 
-    def "openStream"(){
-        def fileKey = "2021/11/13/ff5398c4-2571-fc67-64c3-f874073067dc.txt"
-        def fileName="ff5398c4-2571-fc67-64c3-f874073067dc.txt"
-        def storageName = fileStorage.getStorageName()
-        def fileRef = new FileRef(storageName, fileKey, fileName)
-        fileStorage.openStream(fileRef)
-
-        expect: true
-    }
-
-    def "fileExists"() {
-        def storageName = fileStorage.getStorageName()
-        def fileKey = "2021/11/13/ff5398c4-2571-fc67-64c3-f874073067dc.txt"
-        def fileName="ff5398c4-2571-fc67-64c3-f874073067dc.txt"
-
-        def fileref = new FileRef(storageName, fileKey, fileName)
-        def exists = fileStorage.fileExists(fileref)
-
-        expect:  exists
-
-    }
-
-
-    def "removeFile"(){
-        def storageName = fileStorage.getStorageName()
-        def fileKey = "2021/11/12/583fa259-848e-0ad3-8888-7d6be6e6f203.txt"
-        def fileName="583fa259-848e-0ad3-8888-7d6be6e6f203.txt"
-
-        def fileref = new FileRef(storageName, fileKey, fileName);
-        fileStorage.removeFile(fileref)
-
-        def exists = fileStorage.fileExists(fileref)
-
-        expect:  !exists
-    }
-
-    def "getRegion"(){
-        def region = qiniuFileRegion.getRegion("");
-        println region
-        expect: true
-    }
-
-    def "ali storage initialized"() {
+    def "storage initialized"() {
         expect:
         fileStorage.getStorageName() == QiniuFileStorage.DEFAULT_STORAGE_NAME
     }

@@ -1,62 +1,32 @@
 buildscript {
-    ext.aliRepo = [
-            snapshot: 'https://repo-snapshot.sikada.cn/',
-            release : 'https://repo.sikada.cn/',
-            username: project.hasProperty("skd.repo.username") ? project['skd.repo.username'] : '',
-            password: project.hasProperty("skd.repo.password") ? project['skd.repo.password'] : ''
-    ]
-
     repositories {
         gradlePluginPortal()
         maven {
             url 'https://maven.aliyun.com/nexus/content/groups/public/'
         }
-
-        maven {
-            url aliRepo.release
-            credentials {
-                username(aliRepo.username)
-                password(aliRepo.password)
-            }
-        }
-        maven {
-            url aliRepo.snapshot
-            credentials {
-                username(aliRepo.username)
-                password(aliRepo.password)
-            }
-        }
-
     }
     dependencies {
-        classpath "io.jmix.gradle:jmix-gradle-plugin:1.1.0"
+        classpath "io.jmix.gradle:jmix-gradle-plugin:1.1.4"
     }
 }
 group = 'io.github.pierresj'
-version = '1.0.0-SNAPSHOT'
-//version = '1.0.0-RELEASE'
-if(project.hasProperty('teamcity')) {
-    version += '-build-' + project.teamcity['build.number']
-}
+
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven-publish'
     apply plugin: 'io.jmix'
-    apply plugin: 'signing'
-
-    signing {
-        sign configurations.archives
-    }
 
     repositories {
-        mavenCentral()
+        maven {
+            url 'https://maven.aliyun.com/nexus/content/groups/public/'
+        }
         maven {
             url 'https://global.repo.jmix.io/repository/public'
         }
     }
 
     jmix {
-        bomVersion = '1.1.0'
+        bomVersion = '1.1.4'
         projectId = 'qiniufs'
     }
 
@@ -68,38 +38,22 @@ subprojects {
     def subArchivesBaseName = props.getProperty('archivesBaseName')
     def archName = subArchivesBaseName.substring(1, subArchivesBaseName.length() - 1)
 
-    task javadocJar(type: Jar) {
-        classifier = 'javadoc'
-        from javadoc
-    }
-
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
     java {
         withSourcesJar()
     }
 
     artifacts {
-        archives javadocJar, sourcesJar
-    }
-
-    ext {
-        isReleaseVersion = !version.endsWith("SNAPSHOT")
-        //isReleaseVersion = !version.endsWith("RELEASE")
+        archives sourcesJar
     }
 
     publishing {
         repositories {
             maven {
-                def releaseRepo = "https://s01.oss.sonatype.org/content/repositories/releases/"
-                def snapshotRepo = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                url = isReleaseVersion ? releaseRepo : snapshotRepo
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/pierresj/jmix-huaweifs"
                 credentials {
-                    username = sonatypeUsername
-                    password = sonatypePassword
+                    username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                    password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
                 }
             }
         }
@@ -111,15 +65,9 @@ subprojects {
         }
     }
 
-    signing {
-        sign publishing.publications.javaMaven
-    }
-
     // remove after https://youtrack.jetbrains.com/issue/IDEA-227215 is fixed
     tasks.withType(GenerateModuleMetadata) {
         enabled = false
     }
 
 }
-
-
