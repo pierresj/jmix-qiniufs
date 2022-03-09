@@ -148,7 +148,7 @@ public class QiniuFileStorage implements FileStorage {
         try {
             byte[] data = IOUtils.toByteArray(inputStream); //数据流
 
-            Auth auth = Auth.create(accessKey, secretAccessKey);
+            Auth auth = clientReference.get();
             String upToken = auth.uploadToken(bucket);
             String localTempDir = Paths.get(System.getenv("java.io.tmpdir"), bucket).toString();
             //设置断点续传文件进度保存目录
