@@ -17,7 +17,7 @@ public class QiniuFileRegion {
     }
 
     public Region getRegion(String region){
-        Map<String, Region> regionMap = new HashMap();
+        Map<String, Region> regionMap = new HashMap<String, Region>();
         regionMap.put("huadong", Region.huadong());
         regionMap.put("huabei", Region.huabei());
         regionMap.put("huanan", Region.huanan());
