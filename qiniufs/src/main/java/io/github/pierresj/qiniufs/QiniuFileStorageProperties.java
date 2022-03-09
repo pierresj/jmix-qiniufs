@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@ConfigurationProperties(prefix = "stone.qiniufs")
+@ConfigurationProperties(prefix = "jmix.qiniufs")
 @ConstructorBinding
 public class QiniuFileStorageProperties {
     String accessKey;
