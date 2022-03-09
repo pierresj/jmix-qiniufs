@@ -1,4 +1,3 @@
-import io.github.pierresj.qiniufs.QiniuFileRegion
 import io.github.pierresj.qiniufs.QiniuFileStorage
 import io.github.pierresj.qiniufs.QiniuFileStorageConfiguration
 import io.jmix.core.CoreConfiguration
@@ -22,13 +21,10 @@ class QiniuFileStorageTest extends Specification {
 
     @Autowired
     private FileStorage fileStorage
-    @Autowired
-    private QiniuFileRegion qiniuFileRegion;
-
 
     def "save open remove"(){
         def fileName=UuidProvider.createUuid().toString()+".txt";
-        String string = "Text for testing qiniu.";
+        String string = "Text for testing.";
         InputStream inputStream = new ByteArrayInputStream(string.getBytes());
         def fileRef=fileStorage.saveStream(fileName,inputStream);
         def fileExists= fileStorage.fileExists(fileRef)
@@ -42,7 +38,7 @@ class QiniuFileStorageTest extends Specification {
         }
     }
 
-    def "storage initialized"() {
+    def "qiniu storage initialized"() {
         expect:
         fileStorage.getStorageName() == QiniuFileStorage.DEFAULT_STORAGE_NAME
     }

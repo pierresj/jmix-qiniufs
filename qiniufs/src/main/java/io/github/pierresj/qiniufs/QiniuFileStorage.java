@@ -33,7 +33,7 @@ import com.google.gson.*;
 public class QiniuFileStorage implements FileStorage {
 
     private static final Logger log = LoggerFactory.getLogger(QiniuFileStorage.class);
-    public static final String DEFAULT_STORAGE_NAME = "qiniukodo";
+    public static final String DEFAULT_STORAGE_NAME = "qiniu_fs";
 
     protected String storageName;
 
