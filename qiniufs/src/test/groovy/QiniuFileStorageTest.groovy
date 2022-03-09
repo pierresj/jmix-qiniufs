@@ -38,16 +38,6 @@ class QiniuFileStorageTest extends Specification {
         }
     }
 
-    def "save stream"(){
-        def fileName=UuidProvider.createUuid().toString()+".txt";
-        def fileStream=this.getClass().getClassLoader().getResourceAsStream("files/simple.txt");
-        //println fileStream
-        def fileRef=fileStorage.saveStream(fileName,fileStream);
-        def openedStream=fileStorage.openStream(fileRef);
-        expect:
-        openedStream!=null
-    }
-
     def "qiniu storage initialized"() {
         expect:
         fileStorage.getStorageName() == QiniuFileStorage.DEFAULT_STORAGE_NAME
