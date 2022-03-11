@@ -6,11 +6,11 @@
 
 | Jmix Version | Add-on Version | Implementation |
 |:-|:-|:-|
-| 1.1.* |1.0.0|io.github.pierresj:jmix-qiniufs-starter:1.0.0-RELEASE|
+| 1.1.* |1.0.2|io.github.pierresj:jmix-qiniufs-starter:1.0.2|
 
 ### build.gradle
 ```
-implementation 'io.github.pierresj:jmix-qiniufs-starter:1.0.0-RELEASE'
+implementation 'io.github.pierresj:jmix-qiniufs-starter:1.0.2'
 ```
 ### 配置参数(以properties文件为例)
 ```properties
