@@ -6,7 +6,7 @@
 
 | Jmix Version | Add-on Version | Implementation |
 |:-|:-|:-|
-| 1.1.* |1.0.2|io.github.pierresj:jmix-qiniufs-starter:1.0.2|
+| 1.1.*-1.2.1 |1.0.2|io.github.pierresj:jmix-qiniufs-starter:1.0.2|
 
 ### build.gradle
 ```
